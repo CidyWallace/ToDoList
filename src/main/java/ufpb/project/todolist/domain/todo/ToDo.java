@@ -27,4 +27,14 @@ public class ToDo {
         this.task = dados.task();
         this.completed = false;
     }
+
+    public ToDo AtualizaDados(DadosCriarTarefa dados) {
+        if(dados.titulo() != null){
+            this.titulo = dados.titulo();
+        }
+        if(dados.task() != null){
+            this.task = dados.task();
+        }
+        return this;
+    }
 }

@@ -33,8 +33,13 @@ public class ToDoService {
         return todo.map(t -> t.stream().map(DadosDetalhamentoToDo::new).toList()).orElseGet(() -> List.of(new DadosDetalhamentoToDo(new ToDo())));
     }
 
-    public DadosDetalhamentoToDo findById(Long id, Usuario user) {
-        return new DadosDetalhamentoToDo(toDoRepository.findByIdAndUsuario_Id(id, user.getId()).orElse(new ToDo()));
+    public ToDo findById(Long id, Usuario user) {
+        var todo = toDoRepository.findByIdAndUsuario_Id(id, user.getId());
+        if (todo.isPresent()) {
+            return todo.get();
+        }else{
+            throw new NullPointerException("Nenhuma tarefa encontrada!");
+        }
     }
 
     @Transactional
@@ -50,6 +55,16 @@ public class ToDoService {
     public List<DadosDetalhamentoToDo> findAllTasksCompletedTrue(Usuario user) {
         var todo = toDoRepository.findAllByCompletedTrueAndUsuario_Id(user.getId());
         return todo.map(t -> t.stream().map(DadosDetalhamentoToDo::new).toList()).orElseGet(() -> List.of(new DadosDetalhamentoToDo(new ToDo())));
+    }
+
+    @Transactional
+    public ToDo editaTask(Long id, DadosCriarTarefa dados, Usuario user) {
+        var task = findById(id, user);
+        if(task.getId() != null && !task.getCompleted()) {
+            return task.AtualizaDados(dados);
+        }else{
+            throw new NullPointerException("Nenhuma tarefa encontrada ou já foi completada!");
+        }
     }
 
     public URI criarURI(ToDo todo, UriComponentsBuilder uriBuilder) {

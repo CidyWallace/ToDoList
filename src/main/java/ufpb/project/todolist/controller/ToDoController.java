@@ -36,7 +36,11 @@ public class ToDoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoToDo> findById(@PathVariable Long id){
-        return ResponseEntity.ok(toDoService.findById(id, getUser()));
+        try{
+            return ResponseEntity.ok(new DadosDetalhamentoToDo(toDoService.findById(id, getUser())));
+        }catch (NullPointerException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/true")
@@ -50,6 +54,16 @@ public class ToDoController {
             toDoService.completTaks(id, getUser());
             return ResponseEntity.ok().build();
         }catch (NullPointerException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DadosDetalhamentoToDo> editarTask(@PathVariable Long id, @RequestBody @Valid DadosCriarTarefa dados){
+        try{
+            var todo = toDoService.editaTask(id, dados, getUser());
+            return ResponseEntity.ok(new DadosDetalhamentoToDo(todo));
+        } catch (NullPointerException e){
             return ResponseEntity.notFound().build();
         }
     }
