@@ -2,10 +2,7 @@ package ufpb.project.todolist.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ufpb.project.todolist.domain.usuario.DadosAutenticacao;
 import ufpb.project.todolist.domain.usuario.DadosDetalhentoUsuario;
@@ -15,16 +12,29 @@ import ufpb.project.todolist.service.UsuarioService;
 @RequestMapping("/usuario")
 public class UsuarioController {
 
-    private final UsuarioService autenticacaoService;
+    private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService autenticacaoService) {
-        this.autenticacaoService = autenticacaoService;
+        this.usuarioService = autenticacaoService;
     }
 
     @PostMapping
     public ResponseEntity<DadosDetalhentoUsuario> cadastrar(@RequestBody @Valid DadosAutenticacao dados, UriComponentsBuilder uriBuilder) {
-        var cadastro = autenticacaoService.cadastrar(dados);
-        var uri = autenticacaoService.criarURI(cadastro, uriBuilder);
-        return ResponseEntity.created(uri).body(new DadosDetalhentoUsuario(cadastro));
+        try{
+            var cadastro = usuarioService.cadastrar(dados);
+            var uri = usuarioService.criarURI(cadastro, uriBuilder);
+            return ResponseEntity.created(uri).body(new DadosDetalhentoUsuario(cadastro));
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DadosDetalhentoUsuario> findUsuarioById(@PathVariable Long id) {
+        try{
+            return ResponseEntity.ok(usuarioService.findByIdUser(id));
+        }catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

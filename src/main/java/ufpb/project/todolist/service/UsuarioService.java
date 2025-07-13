@@ -40,10 +40,17 @@ public class UsuarioService {
     }
 
     public DadosDetalhentoUsuario findByIdUser(Long id) {
-        return new DadosDetalhentoUsuario(usuarioRepository.findById(id).orElse(new Usuario()));
+        var user = usuarioRepository.findById(id);
+        if(user.isPresent()) {
+            return new DadosDetalhentoUsuario(user.get());
+        }else{
+            throw new NullPointerException("Usuário não encontrado!");
+        }
+
     }
 
     public URI criarURI(Usuario usuario, UriComponentsBuilder uriBuilder) {
-        return uriBuilder.path("/login/{id}").buildAndExpand(usuario.getId()).toUri();
+        return uriBuilder.path("/usuario/{id}").buildAndExpand(usuario.getId()).toUri();
     }
+
 }
