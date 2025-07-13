@@ -1,16 +1,15 @@
 package ufpb.project.todolist.domain.todo;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import ufpb.project.todolist.domain.usuario.Usuario;
 
 @Entity(name = "ToDo")
 @Table(name = "todos")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 public class ToDo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +18,13 @@ public class ToDo {
     private String task;
     private Boolean completed;
 
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private Usuario usuario;
+
     public ToDo(DadosCriarTarefa dados) {
         this.titulo = dados.titulo();
         this.task = dados.task();
-        this.completed = true;
+        this.completed = false;
     }
 }
