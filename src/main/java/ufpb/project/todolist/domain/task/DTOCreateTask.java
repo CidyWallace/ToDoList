@@ -1,8 +1,8 @@
-package ufpb.project.todolist.domain.todo;
+package ufpb.project.todolist.domain.task;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record DadosCriarTarefa(
+public record DTOCreateTask(
         @NotBlank
         String titulo,
         @NotBlank

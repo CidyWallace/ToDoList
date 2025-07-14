@@ -4,8 +4,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-import ufpb.project.todolist.domain.usuario.DadosAutenticacao;
-import ufpb.project.todolist.domain.usuario.DadosDetalhentoUsuario;
+import ufpb.project.todolist.domain.usuario.DTOAutenticacao;
+import ufpb.project.todolist.domain.usuario.DTODetalhentoUsuario;
 import ufpb.project.todolist.domain.usuario.Usuario;
 import ufpb.project.todolist.infra.security.TokenService;
 import ufpb.project.todolist.repository.UsuarioRepository;
@@ -23,7 +23,7 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Usuario cadastrar(DadosAutenticacao dados) {
+    public Usuario cadastrar(DTOAutenticacao dados) {
         var email = usuarioRepository.existsByLogin(dados.login());
 
         if (email) {
@@ -35,14 +35,14 @@ public class UsuarioService {
         return usuario;
     }
 
-    public List<DadosDetalhentoUsuario> findAllUser(){
-        return usuarioRepository.findAll().stream().map(DadosDetalhentoUsuario::new).toList();
+    public List<DTODetalhentoUsuario> findAllUser(){
+        return usuarioRepository.findAll().stream().map(DTODetalhentoUsuario::new).toList();
     }
 
-    public DadosDetalhentoUsuario findByIdUser(Long id) {
+    public DTODetalhentoUsuario findByIdUser(Long id) {
         var user = usuarioRepository.findById(id);
         if(user.isPresent()) {
-            return new DadosDetalhentoUsuario(user.get());
+            return new DTODetalhentoUsuario(user.get());
         }else{
             throw new NullPointerException("Usuário não encontrado!");
         }

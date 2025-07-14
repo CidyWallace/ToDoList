@@ -1,4 +1,4 @@
-package ufpb.project.todolist.domain.todo;
+package ufpb.project.todolist.domain.task;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,7 @@ import ufpb.project.todolist.domain.usuario.Usuario;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class ToDo {
+public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
@@ -22,13 +22,13 @@ public class ToDo {
     @JoinColumn(name = "user_id")
     private Usuario usuario;
 
-    public ToDo(DadosCriarTarefa dados) {
+    public Task(DTOCreateTask dados) {
         this.titulo = dados.titulo();
         this.task = dados.task();
         this.completed = false;
     }
 
-    public ToDo AtualizaDados(DadosCriarTarefa dados) {
+    public Task AtualizaDados(DTOEditarTask dados) {
         if(dados.titulo() != null){
             this.titulo = dados.titulo();
         }
