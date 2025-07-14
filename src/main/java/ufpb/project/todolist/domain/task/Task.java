@@ -28,7 +28,7 @@ public class Task {
         this.completed = false;
     }
 
-    public Task AtualizaDados(DTOEditarTask dados) {
+    public Task AtualizaDados(DTOEditTask dados) {
         if(dados.titulo() != null){
             this.titulo = dados.titulo();
         }

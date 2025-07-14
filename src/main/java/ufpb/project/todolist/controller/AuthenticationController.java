@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ufpb.project.todolist.domain.usuario.DTOAutenticacao;
+import ufpb.project.todolist.domain.usuario.DTOAuthentication;
 import ufpb.project.todolist.domain.usuario.Usuario;
 import ufpb.project.todolist.infra.security.DTOTokenJWT;
 import ufpb.project.todolist.infra.security.TokenService;
 
 @RestController
 @RequestMapping("/login")
-public class AutenticacaoController {
+public class AuthenticationController {
 
     private final TokenService tokenService;
     private final AuthenticationManager manager;
 
-    public AutenticacaoController(AuthenticationManager manager, TokenService tokenService) {
+    public AuthenticationController(AuthenticationManager manager, TokenService tokenService) {
         this.manager = manager;
         this.tokenService = tokenService;
     }
 
     @PostMapping
-    public ResponseEntity<DTOTokenJWT> autenticar(@RequestBody @Valid DTOAutenticacao dados) {
+    public ResponseEntity<DTOTokenJWT> autenticar(@RequestBody @Valid DTOAuthentication dados) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
         var authenticacion = manager.authenticate(authenticationToken);
 

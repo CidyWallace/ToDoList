@@ -6,8 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ufpb.project.todolist.domain.task.DTOCreateTask;
-import ufpb.project.todolist.domain.task.DTODetalhamentoTask;
-import ufpb.project.todolist.domain.task.DTOEditarTask;
+import ufpb.project.todolist.domain.task.DTOTaskDetails;
+import ufpb.project.todolist.domain.task.DTOEditTask;
 import ufpb.project.todolist.domain.usuario.Usuario;
 import ufpb.project.todolist.service.TaskService;
 
@@ -23,23 +23,23 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<DTODetalhamentoTask> criarTarefa(@RequestBody @Valid DTOCreateTask dados, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DTOTaskDetails> criarTarefa(@RequestBody @Valid DTOCreateTask dados, UriComponentsBuilder uriBuilder) {
         var todo = toDoService.createTask(dados, getUser());
         var uri = toDoService.createURI(todo,uriBuilder);
-        return ResponseEntity.created(uri).body(new DTODetalhamentoTask(todo));
+        return ResponseEntity.created(uri).body(new DTOTaskDetails(todo));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DTODetalhamentoTask> findById(@PathVariable Long id){
+    public ResponseEntity<DTOTaskDetails> findById(@PathVariable Long id){
         try{
-            return ResponseEntity.ok(new DTODetalhamentoTask(toDoService.findById(id, getUser())));
+            return ResponseEntity.ok(new DTOTaskDetails(toDoService.findById(id, getUser())));
         }catch (NullPointerException e){
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping()
-    public ResponseEntity<List<DTODetalhamentoTask>> findAllTasksCompleted(@RequestParam(name = "completed", defaultValue = "true") String completed){
+    public ResponseEntity<List<DTOTaskDetails>> findAllTasksCompleted(@RequestParam(name = "completed", defaultValue = "true") String completed){
         try{
             System.out.println(completed);
             return ResponseEntity.ok(toDoService.findAllTasksCompleted(completed, getUser()));
@@ -59,10 +59,10 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DTODetalhamentoTask> editarTask(@PathVariable Long id, @RequestBody @Valid DTOEditarTask dados){
+    public ResponseEntity<DTOTaskDetails> editarTask(@PathVariable Long id, @RequestBody @Valid DTOEditTask dados){
         try{
             var todo = toDoService.editeTask(id, dados, getUser());
-            return ResponseEntity.ok(new DTODetalhamentoTask(todo));
+            return ResponseEntity.ok(new DTOTaskDetails(todo));
         } catch (NullPointerException e){
             return ResponseEntity.notFound().build();
         }

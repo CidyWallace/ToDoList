@@ -5,8 +5,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import ufpb.project.todolist.domain.task.DTOCreateTask;
-import ufpb.project.todolist.domain.task.DTODetalhamentoTask;
-import ufpb.project.todolist.domain.task.DTOEditarTask;
+import ufpb.project.todolist.domain.task.DTOTaskDetails;
+import ufpb.project.todolist.domain.task.DTOEditTask;
 import ufpb.project.todolist.domain.task.Task;
 import ufpb.project.todolist.domain.usuario.Usuario;
 import ufpb.project.todolist.repository.ToDoRepository;
@@ -31,9 +31,9 @@ public class TaskService {
         return todo;
     }
 
-    public List<DTODetalhamentoTask> findAllTasksCompletedFalse(Usuario user) {
+    public List<DTOTaskDetails> findAllTasksCompletedFalse(Usuario user) {
         var todo = toDoRepository.findAllByUsuario_IdAndCompletedFalse(user.getId());
-        return todo.map(t -> t.stream().map(DTODetalhamentoTask::new).toList()).orElseGet(() -> List.of(new DTODetalhamentoTask(new Task())));
+        return todo.map(t -> t.stream().map(DTOTaskDetails::new).toList()).orElseGet(() -> List.of(new DTOTaskDetails(new Task())));
     }
 
     public Task findById(Long id, Usuario user) {
@@ -55,20 +55,20 @@ public class TaskService {
         }
     }
 
-    public List<DTODetalhamentoTask> findAllTasksCompleted(String completd, Usuario user) {
+    public List<DTOTaskDetails> findAllTasksCompleted(String completd, Usuario user) {
         Optional<List<Task>> todo;
         if(completd.equals("true")) {
              todo = toDoRepository.findAllByCompletedTrueAndUsuario_Id(user.getId());
-             return todo.map(t -> t.stream().map(DTODetalhamentoTask::new).toList()).orElseGet(List::of);
+             return todo.map(t -> t.stream().map(DTOTaskDetails::new).toList()).orElseGet(List::of);
         }else if(completd.equals("false")) {
              todo = toDoRepository.findAllByUsuario_IdAndCompletedFalse(user.getId());
-             return todo.map(t -> t.stream().map(DTODetalhamentoTask::new).toList()).orElseGet(List::of);
+             return todo.map(t -> t.stream().map(DTOTaskDetails::new).toList()).orElseGet(List::of);
         }
-        return List.of(new DTODetalhamentoTask(new Task()));
+        return List.of(new DTOTaskDetails(new Task()));
     }
 
     @Transactional
-    public Task editeTask(Long id, DTOEditarTask dados, Usuario user) {
+    public Task editeTask(Long id, DTOEditTask dados, Usuario user) {
         var task = findById(id, user);
         if(task.getId() != null && !task.getCompleted()) {
             return task.AtualizaDados(dados);
