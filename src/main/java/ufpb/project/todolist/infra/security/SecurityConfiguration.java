@@ -1,5 +1,7 @@
 package ufpb.project.todolist.infra.security;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,5 +45,14 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI(){
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Todolist")
+                        .description("Está é uma simples API que cria usuários e tarefas")
+                        .version("v1.0.0"));
     }
 }
